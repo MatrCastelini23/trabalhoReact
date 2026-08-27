@@ -1,5 +1,6 @@
-import { useState, useCallback } from "react";
+import { useState, useCallback, useEffect } from "react";
 import { StatusJogador } from "../components/StatusJogador";
+
 
 function Game() {
     const [vida, setVida] = useState(100);
@@ -18,7 +19,7 @@ function Game() {
             setJogadas((current) => current + 1),
             setAux((current) => current + 1),
             setHistorico([...historico, { id: jogadas, message: "Voce comeu \n Vida: +20, Comida: -1" }])
-    }, [comida, vida, jogadas])
+    }, [historico, comida, vida, jogadas, aux])
 
     const descansar = useCallback(() => {
         setEnergia((current) => current + 30),
@@ -26,7 +27,7 @@ function Game() {
             setJogadas((current) => current + 1),
             setAux((current) => current + 1),
             setHistorico([...historico, { id: jogadas, message: "Voce descansou \n vida: +5, energia: +30" }])
-    }, [energia, vida])
+    }, [historico, energia, vida, jogadas, aux])
 
     const trabalhar = useCallback(() => {
         setEnergia((current) => current - 25),
@@ -34,19 +35,26 @@ function Game() {
             setJogadas((current) => current + 1),
             setAux((current) => current + 1),
             setHistorico([...historico, { id: jogadas, message: "Voce trabalho \n recursos +10" }])
-    }, [energia, recursos])
+    }, [historico, energia, recursos, jogadas, aux])
 
     const explorar = useCallback(() => {
         setJogadas((current) => current + 1)
         setAux(0)
         const random = Math.floor(Math.random() * (5 - 1 + 1) + 1)
-        if (random == 1) return (setComida((current) => current + 2), setHistorico([...historico, { id: jogadas, message: "Resultado da exploração: \n Voce encontrou comida \n Comida: +2" }]))
-        if (random == 2) return (setRecursos((current) => current + 10), setHistorico([...historico, { id: jogadas, message: "Resultado da exploração: \n Voce encontrou recusos \n Recursos: +10" }]))
-        if (random == 3) return (setRecursos((current) => current - 45), setHistorico([...historico, { id: jogadas, message: "Resultado da exploração: \n Voce perdeu vida \n Vida: -45" }]))
-        if (random == 4) return (setEnergia((current) => current - 40), setHistorico([...historico, { id: jogadas, message: "Resultado da exploração: \n Voce perdeu energia \n Energia: -40" }]))
-        if (random == 5) return (setHistorico([...historico, { id: jogadas, message: "Resultado da exploração: \n Nada aconteceu" }]))
-    }, [])
+        if (random == 1) return setComida((current) => current + 2), setHistorico([...historico, { id: jogadas, message: "Resultado da exploração: Voce encontrou comida Comida: +2" }])
+        if (random == 2) return setRecursos((current) => current + 10), setHistorico([...historico, { id: jogadas, message: "Resultado da exploração: \n Voce encontrou recusos \n Recursos: +10" }])
+        if (random == 3) return setVida((current) => current - 45), setHistorico([...historico, { id: jogadas, message: "Resultado da exploração: \n Voce perdeu vida \n Vida: -45" }])
+        if (random == 4) return setEnergia((current) => current - 40), setHistorico([...historico, { id: jogadas, message: "Resultado da exploração: \n Voce perdeu energia \n Energia: -40" }])
+        if (random == 5) return setHistorico([...historico, { id: jogadas, message: "Resultado da exploração: \n Nada aconteceu" }])
+    }, [historico, aux, jogadas, recursos, comida, recursos, energia])
 
+    useEffect(() => {
+        if (recursos >= 50 && vida >= 1) return alert('Voce venceu')
+    }, [recursos])
+
+    useEffect(() => {
+        if (vida <= 0 || energia <= 0) return alert('Voce Perdeu')
+    }, [vida, energia])
     return (
         <>
             <div>
@@ -59,18 +67,18 @@ function Game() {
             </div>
             <div>
                 <button
-                    onClick={() => { explorar() }}
+                    onClick={explorar}
                 >Explorar</button>
                 <button
-                    onClick={() => { descansar() }}
+                    onClick={descansar}
                     disabled={aux == 2 ? true : false}
                 >Descansar</button>
                 <button
-                    onClick={() => { comer() }}
+                    onClick={comer}
                     disabled={aux == 2 ? true : false}
                 >Comer</button>
                 <button
-                    onClick={() => { trabalhar() }}
+                    onClick={trabalhar}
                     disabled={aux == 2 ? true : false}
                 >Trabalhar</button>
             </div>
