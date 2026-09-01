@@ -1,22 +1,22 @@
-interface IStartProps {
-    onStart: () => void,
+interface IEndProps {
+    newGame: () => void,
 }
 
-function Start({ onStart }: IStartProps) {
+function End({ newGame }: IEndProps) {
     function handleSubmit(e: React.FormEvent) {
         e.preventDefault();
-        onStart();
+        newGame();
     }
+
     return (
         <div>
-            <h1>Inicio</h1>
+            <h1>Fim</h1>
             <form onSubmit={handleSubmit}>
                 <button type="submit">Novo jogo</button>
-                <button>Continuar</button>
                 <button>Sair</button>
             </form>
         </div>
     )
 }
 
-export default Start;
+export default End;

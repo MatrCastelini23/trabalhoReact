@@ -2,6 +2,7 @@ import { useState, useCallback, useEffect } from "react";
 import { StatusJogador } from "../components/StatusJogador";
 
 
+
 function Game() {
     const [vida, setVida] = useState(100);
     const [energia, setEnergia] = useState(100);
