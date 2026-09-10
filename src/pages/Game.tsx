@@ -1,9 +1,11 @@
-import { useState, useCallback, useEffect } from "react";
+import { useState, useCallback, useEffect, type ReactNode } from "react";
 import { StatusJogador } from "../components/StatusJogador";
 
+interface IGameProps {
+    setScreen: (screen: string) => void;
+}
 
-
-function Game() {
+function Game({ setScreen }: IGameProps) {
     const [vida, setVida] = useState(100);
     const [energia, setEnergia] = useState(100);
     const [comida, setComida] = useState(5);
@@ -50,12 +52,19 @@ function Game() {
     }, [historico, aux, jogadas, recursos, comida, recursos, energia])
 
     useEffect(() => {
-        if (recursos >= 50 && vida >= 1) return alert('Voce venceu')
-    }, [recursos])
+        if (recursos >= 50 && vida >= 1) {
+            alert('Voce venceu')
+            setScreen('end')
+        }
+    }, [recursos, vida, setScreen])
 
     useEffect(() => {
-        if (vida <= 0 || energia <= 0) return alert('Voce Perdeu')
-    }, [vida, energia])
+        if (vida <= 0 || energia <= 0) {
+            alert('Voce Perdeu')
+            setScreen('end')
+        }
+    }, [vida, energia, setScreen])
+
     return (
         <>
             <div>
