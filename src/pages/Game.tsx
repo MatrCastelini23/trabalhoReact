@@ -1,6 +1,6 @@
 import { useCallback, useEffect } from "react";
 import { StatusJogador } from "../components/StatusJogador";
-import { useLocalStorage } from "../hooks/useLocalStorage"; // ajuste o caminho conforme seu projeto
+import { useLocalStorage } from "../hooks/useLocalStorage";
 
 interface IGameProps {
     setScreen: (screen: string) => void;
